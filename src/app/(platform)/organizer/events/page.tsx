@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { requireOnboardedUser } from "@/lib/auth/require-onboarded-user";
 import { getOrganizationEvents } from "@/features/events/lib/get-organization-events";
+import { SubmitForReviewButton } from "@/features/events/components/submit-for-review-button";
 
 export default async function OrganizerEventsPage() {
   await requireOnboardedUser();
@@ -49,7 +50,7 @@ export default async function OrganizerEventsPage() {
                   <tr key={event.id} className="text-sm text-slate-700">
                     <td className="px-6 py-4 font-medium text-slate-900">
                       <Link
-                        href={`/organizer/events/${event.id}/metrics`}
+                        href={`/organizer/events/${event.id}/dashboard`}
                         className="hover:underline"
                       >
                         {event.name}
@@ -73,6 +74,13 @@ export default async function OrganizerEventsPage() {
                     <td className="px-6 py-4">
                       <div className="flex flex-wrap gap-2">
                         <Link
+                          href={`/organizer/events/${event.id}/dashboard`}
+                          className="rounded-md border border-slate-300 px-3 py-1.5 text-xs font-medium text-slate-700 transition hover:bg-slate-50"
+                        >
+                          Dashboard
+                        </Link>
+
+                        <Link
                           href={`/organizer/events/${event.id}/metrics`}
                           className="rounded-md border border-slate-300 px-3 py-1.5 text-xs font-medium text-slate-700 transition hover:bg-slate-50"
                         >
@@ -85,6 +93,11 @@ export default async function OrganizerEventsPage() {
                         >
                           Slots
                         </Link>
+
+                        <SubmitForReviewButton
+                          eventId={event.id}
+                          currentStatus={event.status}
+                        />
                       </div>
                     </td>
                   </tr>

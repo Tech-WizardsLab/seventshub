@@ -13,6 +13,9 @@ export function PlatformSidebar() {
         <Link href="/marketplace" className="block hover:text-slate-900">
           Marketplace
         </Link>
+        <Link href="/shortlist" className="block hover:text-slate-900">
+          Shortlist
+        </Link>
         <Link href="/organizer/organization" className="block hover:text-slate-900">
           My Organization
         </Link>
@@ -21,6 +24,9 @@ export function PlatformSidebar() {
         </Link>
         <Link href="/organizer/inquiries" className="block hover:text-slate-900">
           Incoming Inquiries
+        </Link>
+        <Link href="/admin/review-events" className="block hover:text-slate-900">
+          Review Events
         </Link>
         <Link href="/profile" className="block hover:text-slate-900">
           Profile

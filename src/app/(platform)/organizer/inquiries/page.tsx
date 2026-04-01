@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { requireOnboardedUser } from "@/lib/auth/require-onboarded-user";
 import { getOrganizerInquiries } from "@/features/inquiries/lib/get-organizer-inquiries";
 import { InquiryStatusSelect } from "@/features/inquiries/components/inquiry-status-select";
@@ -31,6 +32,7 @@ export default async function OrganizerInquiriesPage() {
                   <th className="px-6 py-4 font-medium">Slot</th>
                   <th className="px-6 py-4 font-medium">Status</th>
                   <th className="px-6 py-4 font-medium">Date</th>
+                  <th className="px-6 py-4 font-medium">Open</th>
                 </tr>
               </thead>
 
@@ -51,12 +53,21 @@ export default async function OrganizerInquiriesPage() {
                     <td className="px-6 py-4">
                       <InquiryStatusSelect
                         inquiryId={inquiry.id}
-                        currentStatus={inquiry.status as never}
+                        currentStatus={inquiry.status}
                       />
                     </td>
 
                     <td className="px-6 py-4">
                       {new Date(inquiry.created_at).toLocaleDateString()}
+                    </td>
+
+                    <td className="px-6 py-4">
+                      <Link
+                        href={`/organizer/inquiries/${inquiry.id}`}
+                        className="rounded-md border border-slate-300 px-3 py-1.5 text-xs font-medium text-slate-700 transition hover:bg-slate-50"
+                      >
+                        Open
+                      </Link>
                     </td>
                   </tr>
                 ))}

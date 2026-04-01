@@ -26,7 +26,7 @@ export async function getMarketplaceEvents(): Promise<MarketplaceEventCard[]> {
     .select(
       "id, name, slug, sport_type, city, country, short_description, starts_at, organization_id, status"
     )
-    .eq("status", "draft")
+    .eq("status", "approved")
     .order("created_at", { ascending: false });
 
   if (error || !events) {
