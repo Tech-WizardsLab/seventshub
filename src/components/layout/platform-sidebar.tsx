@@ -19,11 +19,14 @@ export function PlatformSidebar() {
         <Link href="/organizer/events" className="block hover:text-slate-900">
           My Events
         </Link>
+        <Link href="/organizer/inquiries" className="block hover:text-slate-900">
+          Incoming Inquiries
+        </Link>
         <Link href="/profile" className="block hover:text-slate-900">
           Profile
         </Link>
         <Link href="/inquiries" className="block hover:text-slate-900">
-          Inquiries
+          My Inquiries
         </Link>
       </nav>
     </div>
