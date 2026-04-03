@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createBrowserSupabaseClient } from "@/lib/supabase/browser";
-import type { OrganizationType, PlatformRole } from "@/types/database";
+import type { PlatformRole } from "@/types/database";
 import { CompanyDetailsForm } from "@/features/onboarding/components/company-details-form";
 import { RoleSelector } from "@/features/onboarding/components/role-selector";
 
@@ -14,18 +14,6 @@ function slugify(value: string) {
     .replace(/['"]/g, "")
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-+|-+$/g, "");
-}
-
-function mapRoleToOrganizationType(role: PlatformRole): OrganizationType {
-  if (role === "organizer") {
-    return "event_organizer";
-  }
-
-  if (role === "sponsor") {
-    return "sponsor";
-  }
-
-  return "other";
 }
 
 export function OnboardingForm() {
@@ -54,7 +42,6 @@ export function OnboardingForm() {
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-
     setError(null);
 
     if (!role || role === "admin") {
@@ -67,112 +54,36 @@ export function OnboardingForm() {
       return;
     }
 
-    const supabase = createBrowserSupabaseClient();
     setPending(true);
 
     try {
-      const {
-        data: { user },
-        error: authError,
-      } = await supabase.auth.getUser();
-
-      if (authError || !user) {
-        setError("You must be logged in to complete onboarding.");
-        return;
-      }
-
-      const organizationType = mapRoleToOrganizationType(role);
+      const supabase = createBrowserSupabaseClient();
       const baseSlug = slugify(companyName);
       const orgSlug = `${baseSlug}-${crypto.randomUUID().slice(0, 8)}`;
 
-      const { data: organization, error: organizationError } = await supabase
-        .from("organizations")
-        .insert({
-          name: companyName.trim(),
-          slug: orgSlug,
-          organization_type: organizationType,
-          website_url: websiteUrl.trim() || null,
-          city: city.trim() || null,
-          country: country.trim() || null,
-          description: description.trim() || null,
-          created_by: user.id,
-        })
-        .select("id")
-        .single();
+      const rpcClient = supabase as typeof supabase & {
+        rpc: (
+          fn: string,
+          args?: Record<string, unknown>
+        ) => Promise<{ data: unknown; error: { message: string } | null }>;
+      };
 
-      if (organizationError || !organization) {
-        setError(organizationError?.message ?? "Could not create organization.");
+      const { error: rpcError } = await rpcClient.rpc("complete_onboarding", {
+        p_platform_role: role,
+        p_company_name: companyName.trim(),
+        p_slug: orgSlug,
+        p_website_url: websiteUrl.trim() || null,
+        p_city: city.trim() || null,
+        p_country: country.trim() || null,
+        p_description: description.trim() || null,
+      });
+
+      if (rpcError) {
+        setError(rpcError.message);
         return;
       }
 
-      const { error: membershipError } = await supabase
-        .from("organization_members")
-        .insert({
-          organization_id: organization.id,
-          profile_id: user.id,
-          membership_role: "owner",
-          is_primary_contact: true,
-        });
-
-      if (membershipError) {
-        setError(membershipError.message);
-        return;
-      }
-
-      const { error: profileError } = await supabase
-        .from("profiles")
-        .update({
-          platform_role: role,
-        })
-        .eq("id", user.id);
-
-      if (profileError) {
-        setError(profileError.message);
-        return;
-      }
-
-      const { error: orgProfileError } = await supabase
-        .from("organization_profiles")
-        .insert({
-          organization_id: organization.id,
-          overview: description.trim() || null,
-          years_operating: null,
-          primary_sports: [],
-          operating_regions: [],
-          notable_partners: [],
-          achievements: [],
-        });
-
-      if (orgProfileError) {
-        setError(orgProfileError.message);
-        return;
-      }
-
-      const { error: orgMetricsError } = await supabase
-        .from("organization_metrics")
-        .insert({
-          organization_id: organization.id,
-        });
-
-      if (orgMetricsError) {
-        setError(orgMetricsError.message);
-        return;
-      }
-
-      if (role === "sponsor") {
-        const { error: sponsorPrefsError } = await supabase
-          .from("sponsor_preferences")
-          .insert({
-            organization_id: organization.id,
-          });
-
-        if (sponsorPrefsError) {
-          setError(sponsorPrefsError.message);
-          return;
-        }
-      }
-
-      router.push("/dashboard");
+      router.replace("/dashboard");
       router.refresh();
     } catch {
       setError("Something went wrong while creating your company workspace.");
