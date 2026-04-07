@@ -1,5 +1,6 @@
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
+import type { Database } from "@/types/database";
 
 export async function createClient() {
   const cookieStore = await cookies();
@@ -15,15 +16,14 @@ export async function createClient() {
     throw new Error("Missing env var: NEXT_PUBLIC_SUPABASE_ANON_KEY");
   }
 
-  return createServerClient(supabaseUrl, supabaseAnonKey, {
+  return createServerClient<Database>(supabaseUrl, supabaseAnonKey, {
     cookies: {
       getAll() {
         return cookieStore.getAll();
       },
-      setAll(cookiesToSet) {
-        cookiesToSet.forEach(({ name, value, options }) => {
-          cookieStore.set(name, value, options);
-        });
+      setAll() {
+        // No-op in Server Components/App rendering.
+        // Cookie writes must happen in Route Handlers or Server Actions.
       },
     },
   });
