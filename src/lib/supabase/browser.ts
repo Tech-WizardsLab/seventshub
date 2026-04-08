@@ -1,5 +1,4 @@
 import { createBrowserClient } from "@supabase/ssr";
-import type { Database } from "@/types/database";
 
 export function createBrowserSupabaseClient() {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -13,5 +12,5 @@ export function createBrowserSupabaseClient() {
     throw new Error("Missing env var: NEXT_PUBLIC_SUPABASE_ANON_KEY");
   }
 
-  return createBrowserClient<Database>(supabaseUrl, supabaseAnonKey);
+  return createBrowserClient(supabaseUrl, supabaseAnonKey);
 }

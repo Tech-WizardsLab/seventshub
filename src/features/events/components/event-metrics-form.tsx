@@ -9,6 +9,12 @@ interface EventMetricsFormProps {
   event: OrganizerEventDetail;
 }
 
+type MetricField = [
+  label: string,
+  value: string,
+  setter: React.Dispatch<React.SetStateAction<string>>
+];
+
 export function EventMetricsForm({ event }: EventMetricsFormProps) {
   const router = useRouter();
   const metrics = event.metrics;
@@ -54,10 +60,10 @@ export function EventMetricsForm({ event }: EventMetricsFormProps) {
     metrics?.audience_b2c_percentage?.toString() ?? ""
   );
   const [audienceTags, setAudienceTags] = useState(
-    metrics?.audience_tags.join(", ") ?? ""
+    metrics?.audience_tags?.join(", ") ?? ""
   );
   const [industryTags, setIndustryTags] = useState(
-    metrics?.industry_tags.join(", ") ?? ""
+    metrics?.industry_tags?.join(", ") ?? ""
   );
   const [demographicSummary, setDemographicSummary] = useState(
     metrics?.demographic_summary ?? ""
@@ -66,12 +72,31 @@ export function EventMetricsForm({ event }: EventMetricsFormProps) {
     metrics?.geographic_summary ?? ""
   );
   const [pastSponsors, setPastSponsors] = useState(
-    metrics?.past_sponsors.join(", ") ?? ""
+    metrics?.past_sponsors?.join(", ") ?? ""
   );
   const [notes, setNotes] = useState(metrics?.notes ?? "");
 
   const [error, setError] = useState<string | null>(null);
   const [pending, setPending] = useState(false);
+
+  const metricFields: MetricField[] = [
+    ["Expected attendance", expectedAttendance, setExpectedAttendance],
+    ["Actual attendance", actualAttendance, setActualAttendance],
+    ["Exhibitors", exhibitorsCount, setExhibitorsCount],
+    ["Speakers", speakersCount, setSpeakersCount],
+    ["Participating brands", participatingBrandsCount, setParticipatingBrandsCount],
+    ["Email reach", emailReach, setEmailReach],
+    ["Website visits", websiteVisits, setWebsiteVisits],
+    ["App users", appUsers, setAppUsers],
+    ["Social impressions", socialImpressions, setSocialImpressions],
+    ["Social engagements", socialEngagements, setSocialEngagements],
+    ["Livestream views", livestreamViews, setLivestreamViews],
+    ["Video views", videoViews, setVideoViews],
+    ["Press mentions", pressMentions, setPressMentions],
+    ["Media reach", mediaReach, setMediaReach],
+    ["Audience B2B %", audienceB2BPercentage, setAudienceB2BPercentage],
+    ["Audience B2C %", audienceB2CPercentage, setAudienceB2CPercentage],
+  ];
 
   async function handleSubmit(eventForm: React.FormEvent<HTMLFormElement>) {
     eventForm.preventDefault();
@@ -117,24 +142,7 @@ export function EventMetricsForm({ event }: EventMetricsFormProps) {
   return (
     <form onSubmit={handleSubmit} className="space-y-8">
       <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-        {[
-          ["Expected attendance", expectedAttendance, setExpectedAttendance],
-          ["Actual attendance", actualAttendance, setActualAttendance],
-          ["Exhibitors", exhibitorsCount, setExhibitorsCount],
-          ["Speakers", speakersCount, setSpeakersCount],
-          ["Participating brands", participatingBrandsCount, setParticipatingBrandsCount],
-          ["Email reach", emailReach, setEmailReach],
-          ["Website visits", websiteVisits, setWebsiteVisits],
-          ["App users", appUsers, setAppUsers],
-          ["Social impressions", socialImpressions, setSocialImpressions],
-          ["Social engagements", socialEngagements, setSocialEngagements],
-          ["Livestream views", livestreamViews, setLivestreamViews],
-          ["Video views", videoViews, setVideoViews],
-          ["Press mentions", pressMentions, setPressMentions],
-          ["Media reach", mediaReach, setMediaReach],
-          ["Audience B2B %", audienceB2BPercentage, setAudienceB2BPercentage],
-          ["Audience B2C %", audienceB2CPercentage, setAudienceB2CPercentage],
-        ].map(([label, value, setter]) => (
+        {metricFields.map(([label, value, setter]) => (
           <div key={label} className="space-y-2">
             <label className="text-sm font-medium text-slate-700">{label}</label>
             <input
