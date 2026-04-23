@@ -50,6 +50,7 @@ export function RegisterForm() {
         options: {
           data: {
             full_name: normalizedName,
+            platform_role: "sponsor",
           },
         },
       });
@@ -60,7 +61,7 @@ export function RegisterForm() {
       }
 
       if (data.session) {
-        router.push("/dashboard");
+        router.push("/onboarding");
         router.refresh();
         return;
       }

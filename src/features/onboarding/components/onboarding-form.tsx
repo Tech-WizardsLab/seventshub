@@ -11,7 +11,7 @@ function slugify(value: string) {
   return value
     .toLowerCase()
     .trim()
-    .replace(/['"]/g, "")
+    .replace(/["']/g, "")
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-+|-+$/g, "");
 }
@@ -19,7 +19,7 @@ function slugify(value: string) {
 export function OnboardingForm() {
   const router = useRouter();
 
-  const [role, setRole] = useState<PlatformRole | "">("");
+  const [role, setRole] = useState<PlatformRole | "">("sponsor");
   const [companyName, setCompanyName] = useState("");
   const [websiteUrl, setWebsiteUrl] = useState("");
   const [city, setCity] = useState("");
@@ -45,7 +45,7 @@ export function OnboardingForm() {
     setError(null);
 
     if (!role || role === "admin") {
-      setError("Please choose whether your company is an organizer or a sponsor.");
+      setError("Sponsor onboarding is currently the active setup flow.");
       return;
     }
 
@@ -86,7 +86,7 @@ export function OnboardingForm() {
       router.replace("/dashboard");
       router.refresh();
     } catch {
-      setError("Something went wrong while creating your company workspace.");
+      setError("Something went wrong while creating your sponsor workspace.");
     } finally {
       setPending(false);
     }
@@ -94,7 +94,7 @@ export function OnboardingForm() {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-8">
-      <RoleSelector value={role} onChange={setRole} />
+      <RoleSelector value={role} onChange={setRole} showOrganizerOption={false} />
 
       <CompanyDetailsForm
         companyName={companyName}
@@ -116,7 +116,7 @@ export function OnboardingForm() {
         disabled={pending}
         className="rounded-lg bg-slate-900 px-5 py-3 text-sm font-semibold text-white transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60"
       >
-        {pending ? "Creating workspace..." : "Continue"}
+        {pending ? "Creating sponsor workspace..." : "Continue"}
       </button>
     </form>
   );

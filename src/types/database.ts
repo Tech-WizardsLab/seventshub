@@ -345,6 +345,145 @@ export interface Database {
         };
       };
 
+
+      sponsor_recommendation_sets: {
+        Row: {
+          id: string;
+          organization_id: string;
+          brief_id: string | null;
+          title: string;
+          status: string;
+          recommended_budget_eur: number | null;
+          projected_total_reach: number | null;
+          projected_attendance_exposure: number | null;
+          projected_touchpoints: number | null;
+          markets_covered: string[];
+          average_fit_score: number | null;
+          analyst_summary: string | null;
+          created_by: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          organization_id: string;
+          brief_id?: string | null;
+          title?: string;
+          status?: string;
+          recommended_budget_eur?: number | null;
+          projected_total_reach?: number | null;
+          projected_attendance_exposure?: number | null;
+          projected_touchpoints?: number | null;
+          markets_covered?: string[];
+          average_fit_score?: number | null;
+          analyst_summary?: string | null;
+          created_by?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          brief_id?: string | null;
+          title?: string;
+          status?: string;
+          recommended_budget_eur?: number | null;
+          projected_total_reach?: number | null;
+          projected_attendance_exposure?: number | null;
+          projected_touchpoints?: number | null;
+          markets_covered?: string[];
+          average_fit_score?: number | null;
+          analyst_summary?: string | null;
+          created_by?: string | null;
+          updated_at?: string;
+        };
+      };
+
+      sponsor_recommendation_items: {
+        Row: {
+          id: string;
+          recommendation_set_id: string;
+          event_id: string | null;
+          selected_package: string | null;
+          fit_score: number | null;
+          projected_reach: number | null;
+          projected_attendance: number | null;
+          projected_touchpoints: number | null;
+          plan_contribution: string | null;
+          recommendation_status: string;
+          why_it_fits: string | null;
+          audience_profile: string | null;
+          organizer_context: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          recommendation_set_id: string;
+          event_id?: string | null;
+          selected_package?: string | null;
+          fit_score?: number | null;
+          projected_reach?: number | null;
+          projected_attendance?: number | null;
+          projected_touchpoints?: number | null;
+          plan_contribution?: string | null;
+          recommendation_status?: string;
+          why_it_fits?: string | null;
+          audience_profile?: string | null;
+          organizer_context?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          event_id?: string | null;
+          selected_package?: string | null;
+          fit_score?: number | null;
+          projected_reach?: number | null;
+          projected_attendance?: number | null;
+          projected_touchpoints?: number | null;
+          plan_contribution?: string | null;
+          recommendation_status?: string;
+          why_it_fits?: string | null;
+          audience_profile?: string | null;
+          organizer_context?: string | null;
+          updated_at?: string;
+        };
+      };
+
+      sponsor_onboarding_briefs: {
+        Row: {
+          id: string;
+          organization_id: string;
+          submitted_by: string;
+          version: number;
+          strategy_status: string;
+          submitted_at: string;
+          briefing_snapshot: Json;
+          notes: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          organization_id: string;
+          submitted_by: string;
+          version?: number;
+          strategy_status?: string;
+          submitted_at?: string;
+          briefing_snapshot: Json;
+          notes?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          submitted_by?: string;
+          version?: number;
+          strategy_status?: string;
+          submitted_at?: string;
+          briefing_snapshot?: Json;
+          notes?: string | null;
+          updated_at?: string;
+        };
+      };
+
       events: {
         Row: {
           id: string;

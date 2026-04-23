@@ -3,6 +3,7 @@ import type { PlatformRole } from "@/types/database";
 interface RoleSelectorProps {
   value: PlatformRole | "";
   onChange: (role: PlatformRole) => void;
+  showOrganizerOption?: boolean;
 }
 
 const options: Array<{
@@ -20,17 +21,25 @@ const options: Array<{
     value: "sponsor",
     title: "Sponsor",
     description:
-      "Your company wants to discover sports events and evaluate sponsorship opportunities.",
+      "Your company wants strategic support to evaluate sponsorship opportunities and execute stronger deals.",
   },
 ];
 
-export function RoleSelector({ value, onChange }: RoleSelectorProps) {
+export function RoleSelector({
+  value,
+  onChange,
+  showOrganizerOption = true,
+}: RoleSelectorProps) {
+  const visibleOptions = showOrganizerOption
+    ? options
+    : options.filter((option) => option.value === "sponsor");
+
   return (
     <div className="space-y-3">
       <p className="text-sm font-medium text-slate-700">Company type</p>
 
       <div className="grid gap-4 md:grid-cols-2">
-        {options.map((option) => {
+        {visibleOptions.map((option) => {
           const selected = value === option.value;
 
           return (
@@ -58,6 +67,12 @@ export function RoleSelector({ value, onChange }: RoleSelectorProps) {
           );
         })}
       </div>
+
+      {!showOrganizerOption ? (
+        <p className="text-xs leading-6 text-slate-500">
+          Organizer onboarding is still supported internally and can be enabled later.
+        </p>
+      ) : null}
     </div>
   );
 }

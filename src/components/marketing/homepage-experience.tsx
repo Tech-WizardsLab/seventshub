@@ -3,15 +3,10 @@
 import Link from "next/link";
 import { motion } from "framer-motion";
 
-const logoNames = [
-  "Coca-Cola",
-  "Red Bull",
-  "Nike",
-  "Garmin",
-  "Maurten",
-  "Adidas",
-  "Puma",
-  "Oakley",
+const brandLogos = [
+  { name: "Coca-Cola", src: "/logos/brands/cocacola.svg" },
+  { name: "Red Bull", src: "/logos/brands/redbull.svg" },
+  { name: "Nike", src: "/logos/brands/nike.svg" },
 ];
 
 const sponsorRecommendations = [
@@ -676,27 +671,31 @@ export function HomepageExperience() {
 
       {/* LOGOS */}
       <section className="border-b border-slate-200 bg-white py-8">
-        <div className="mx-auto max-w-7xl overflow-hidden px-6">
-          <div className="mb-4 text-center text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">
-            Brands and categories this platform is built for
-          </div>
+      <div className="mx-auto max-w-7xl overflow-hidden px-6">
+      <div className="mb-4 text-center text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">
+        Brands and categories this platform is built for
+      </div>
 
-          <motion.div
-            className="flex w-max gap-4"
-            animate={{ x: ["0%", "-50%"] }}
-            transition={{ duration: 18, repeat: Infinity, ease: "linear" }}
+      <motion.div
+        className="flex w-max gap-4"
+        animate={{ x: ["0%", "-50%"] }}
+        transition={{ duration: 18, repeat: Infinity, ease: "linear" }}
+      >
+        {[...brandLogos, ...brandLogos].map((brand, index) => (
+          <div
+            key={`${brand.name}-${index}`}
+            className="flex h-16 min-w-[180px] items-center justify-center rounded-2xl border border-slate-200 bg-slate-50 px-6 shadow-sm"
           >
-            {[...logoNames, ...logoNames].map((name, index) => (
-              <div
-                key={`${name}-${index}`}
-                className="flex h-14 min-w-[170px] items-center justify-center rounded-2xl border border-slate-200 bg-slate-50 px-6 text-sm font-semibold text-slate-700 shadow-sm"
-              >
-                {name}
-              </div>
-            ))}
-          </motion.div>
-        </div>
-      </section>
+            <img
+              src={brand.src}
+              alt={brand.name}
+              className="max-h-8 w-auto object-contain opacity-80 transition duration-300 hover:opacity-100"
+            />
+          </div>
+        ))}
+      </motion.div>
+    </div>
+</section>
 
       {/* CTA */}
       <section className="mx-auto max-w-7xl px-6 py-24">

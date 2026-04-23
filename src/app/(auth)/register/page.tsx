@@ -6,7 +6,7 @@ export default function RegisterPage() {
       <div className="w-full max-w-md rounded-2xl border border-slate-200 bg-white p-8 shadow-sm">
         <h1 className="text-2xl font-semibold text-slate-900">Create your account</h1>
         <p className="mt-2 text-sm text-slate-600">
-          Start your SEventsHub account. Company setup comes in the next step.
+          Start your sponsor account. We&apos;ll guide you into sponsorship strategy setup next.
         </p>
 
         <div className="mt-6">
