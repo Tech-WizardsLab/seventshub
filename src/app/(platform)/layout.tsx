@@ -11,19 +11,11 @@ export default async function PlatformLayout({
   await requireUser();
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900">
-      <div className="flex min-h-screen">
-        <aside className="hidden w-72 border-r border-slate-200 bg-white lg:block">
-          <PlatformSidebar />
-        </aside>
-
-        <div className="flex min-h-screen flex-1 flex-col">
-          <header className="border-b border-slate-200 bg-white">
-            <PlatformHeader />
-          </header>
-
-          <main className="flex-1 px-6 py-8">{children}</main>
-        </div>
+    <div className="min-h-screen bg-slate-50">
+      <PlatformHeader />
+      <div className="mx-auto flex w-full max-w-7xl gap-6 px-4 py-6 sm:px-6 lg:px-8">
+        <PlatformSidebar />
+        <main className="min-w-0 flex-1 space-y-6">{children}</main>
       </div>
     </div>
   );
