@@ -184,7 +184,7 @@ export async function getSponsorRecommendationDashboardData(): Promise<SponsorRe
     }
   }
 
-  if (!opportunities.length) {
+  if (!opportunities.length && !recommendationSet?.id) {
     const { data: fallbackEvents } = await supabase
       .from("events")
       .select(

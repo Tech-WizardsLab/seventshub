@@ -317,16 +317,34 @@ export function SponsorOnboardingWizard() {
         },
       };
 
-      const { error: briefError } = await supabase.from("sponsor_onboarding_briefs").insert({
-        organization_id: organizationId,
-        submitted_by: user.id,
-        version: nextVersion,
-        strategy_status: "preparing",
-        briefing_snapshot: snapshot,
-      });
+      const { data: createdBrief, error: briefError } = await supabase
+        .from("sponsor_onboarding_briefs")
+        .insert({
+          organization_id: organizationId,
+          submitted_by: user.id,
+          version: nextVersion,
+          strategy_status: "preparing",
+          briefing_snapshot: snapshot,
+        })
+        .select("id")
+        .single();
 
       if (briefError) {
         throw new Error(briefError.message);
+      }
+
+      if (createdBrief?.id) {
+        try {
+          await fetch("/api/internal/matching/run", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ briefId: createdBrief.id }),
+          });
+        } catch {
+          // non-blocking: leave status as "preparing" if background generation fails
+        }
       }
 
       router.replace("/strategy-preparation");
